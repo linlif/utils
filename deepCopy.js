@@ -375,7 +375,7 @@ function copyRegExp(regexp) {
 function find(arr, item) {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].source === item) {
-      return arr[i].target;
+      return arr[i].source;
     }
   }
 
@@ -409,7 +409,6 @@ function deepCopy5(sourceObj, hash) {
     var key = node.key
     var data = node.data
     var parent = node.parent
-    // debugger
     // 初始化赋值目标，key为undefined则拷贝到父元素，否则拷贝到子元素
     let res = parent
     console.log('parent', parent)
@@ -434,15 +433,16 @@ function deepCopy5(sourceObj, hash) {
     // 数据已经存在
     let target = find(uniqueList, sourceObj);
     if (target) {
-      parent[key] = target;
+      obj = parent[key] = target;
       break; // 中断本次循环
     }
+    console.log('parent[key]', parent[key])
 
     // 数据不存在
     // 保存源数据，在拷贝数据中对应的引用
     uniqueList.push({
       source: data,
-      target: res,
+      target: res
     });
 
     // 遍历symbols
@@ -480,6 +480,7 @@ function deepCopy5(sourceObj, hash) {
               data: copyRegExp(tempObj)
             })
           } else {
+            console.log('tempObj', tempObj)
             loopList.push({
               parent: res,
               key: key,
@@ -521,7 +522,7 @@ var obj5 = {
     sex: 'male',
     age: 18
   },
-  info2: { a: 11, b: 222 },
+  info2: [{ a: 11, b: 222 }],
   undefined: undefined,
   func: function () { console.log('I am a simple function') },
   exp: new RegExp('\[0-9\]'),
