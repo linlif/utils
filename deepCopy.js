@@ -401,7 +401,6 @@ function deepCopy5(sourceObj, hash) {
 
   // 新增代码，兼容数组类型
   var obj = Array.isArray(sourceObj) ? [] : {}
-  // var hash = hash || new WeakMap() // 使用哈希表存储遍历过的对象
   var uniqueList = [] // 使用数组缓存
 
   var loopList = [{
@@ -417,32 +416,17 @@ function deepCopy5(sourceObj, hash) {
     var parent = node.parent
     // 初始化赋值目标，key为undefined则拷贝到父元素，否则拷贝到子元素
     let res = parent
-    console.log('parent', parent)
-    console.log('key', key)
-    console.log('data', data)
 
     if (typeof key !== 'undefined') {
       res = parent[key] = Array.isArray(data) ? [] : {}
     }
 
-    // 查找hash表中是否存在相同的值
-    // console.log('res', res, hash.has(res))
-    // if (hash.has({ key })) {
-    //   console.log('循环引用~~')
-    //   parent[key] = hash.get(res)
-    //   break; // 很重要，找到相同值就退出循环
-    // }
-    // // 缓存当前的数据对象
-    // hash.set({ key }, data)
-
-    console.log('uniqueList', uniqueList)
     // 数据已经存在
     let target = find(uniqueList, sourceObj);
     if (target) {
       obj = parent[key] = target;
       break; // 中断本次循环
     }
-    console.log('parent[key]', parent[key])
 
     // 数据不存在
     // 保存源数据，在拷贝数据中对应的引用
@@ -486,7 +470,6 @@ function deepCopy5(sourceObj, hash) {
               data: copyRegExp(tempObj)
             })
           } else {
-            console.log('tempObj', tempObj)
             loopList.push({
               parent: res,
               key: key,
