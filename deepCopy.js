@@ -1,6 +1,6 @@
 
 /**
- * 浅拷贝
+ * 一个简单的浅拷贝
  * @param {Object} sourceObj 要复制的对象
  * @returns 返回浅拷贝的对象
  */
@@ -372,6 +372,12 @@ function copyRegExp(regexp) {
   return result
 }
 
+/**
+ * 数组查找
+ * @param {原数组} arr 
+ * @param {要查找的目标} item 
+ * @returns 返回找到的数据，找不到则null
+ */
 function find(arr, item) {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].source === item) {
@@ -497,6 +503,31 @@ function deepCopy5(sourceObj, hash) {
   return obj
 }
 
+var obj5 = {
+  name: 'obj5',
+  info: {
+    sex: 'male',
+    age: 18
+  },
+  undefined: undefined,
+  func: function () { console.log('I am a simple function') },
+  exp: new RegExp('\[0-9\]'),
+  createTime: new Date(),
+  [Symbol('foo')]: new Date(),
+  [Symbol('bar')]: 'symbol bar',
+  [Symbol('bar')]: new RegExp('\[a-z\]'),
+}
+
+// 循环引用
+obj5.circularRef = obj5
+
+// 对象拷贝测试
+var copyObj5 = deepCopy5(obj5)
+console.log('copyObj5-copy', copyObj5)
+copyObj5.info.age = 66
+copyObj5.createTime = new Date('2021-08-10 18:16:40')
+console.log('copyObj5-origin', obj5)
+
 var arr5 = [
   {
     name: 'obj5',
@@ -516,35 +547,9 @@ var arr5 = [
   [1, 2]
 ]
 
-var obj5 = {
-  name: 'obj5',
-  info: {
-    sex: 'male',
-    age: 18
-  },
-  info2: [{ a: 11, b: 222 }],
-  undefined: undefined,
-  func: function () { console.log('I am a simple function') },
-  exp: new RegExp('\[0-9\]'),
-  createTime: new Date(),
-  [Symbol('foo')]: new Date(),
-  [Symbol('bar')]: 'symbol bar',
-  [Symbol('bar')]: new RegExp('\[a-z\]'),
-}
-
-// 循环引用
-obj5.circularRef = obj5
-
-var copyObj5 = deepCopy5(obj5)
-// var copyArr5 = deepCopy5(arr5)
-
-console.log('copyObj5-copy', copyObj5)
-// copyObj5.info.age = 66
-// copyObj5.info.age = 66
-// copyObj5.createTime = new Date('2021-08-10 18:16:40')
-console.log('copyObj5-origin', obj5)
-
-// console.log('copyArr5-copy', copyArr5)
-// copyArr5[0].info.age = 100
-// copyArr5[2][0] = 666
-// console.log('copyArr5-origin', arr5)
+// 数组拷贝测试
+var copyArr5 = deepCopy5(arr5)
+console.log('copyArr5-copy', copyArr5)
+copyArr5[0].info.age = 100
+copyArr5[2][0] = 666
+console.log('copyArr5-origin', arr5)
