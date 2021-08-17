@@ -341,7 +341,7 @@ obj4.arr[2] = 666
 console.log('copyObj4-origin', obj4)
 
 console.log('copyArr4-copy', copyArr4)
-arr4[3][0].a = 'changed to bbb'
+arr4[3][0].a = 'addd aaa'
 arr4[2][1] = 'change to 666'
 console.log('copyArr4-origin', arr4)
 
@@ -381,7 +381,7 @@ function copyRegExp(regexp) {
 function find(arr, item) {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].source === item) {
-      return arr[i].source;
+      return arr[i];
     }
   }
 
@@ -400,11 +400,11 @@ function deepCopy5(sourceObj, hash) {
   }
 
   // 新增代码，兼容数组类型
-  var obj = Array.isArray(sourceObj) ? [] : {}
+  var root = Array.isArray(sourceObj) ? [] : {}
   var uniqueList = [] // 使用数组缓存
 
   var loopList = [{
-    parent: obj,
+    parent: root,
     key: undefined,
     data: sourceObj
   }]
@@ -414,18 +414,20 @@ function deepCopy5(sourceObj, hash) {
     var key = node.key
     var data = node.data
     var parent = node.parent
+
     // 初始化赋值目标，key为undefined则拷贝到父元素，否则拷贝到子元素
     let res = parent
-
     if (typeof key !== 'undefined') {
       res = parent[key] = Array.isArray(data) ? [] : {}
     }
-
+    console.log('uniqueList', uniqueList)
+    // debugger
     // 数据已经存在
-    let target = find(uniqueList, sourceObj);
-    if (target) {
-      obj = parent[key] = target;
-      break; // 中断本次循环
+    let uniqueData = find(uniqueList, data);
+    console.log('uniqueData', uniqueData)
+    if (uniqueData) {
+      parent[key] = uniqueData.target;
+      continue; // 中断本次循环，不能用break，否则会无法拷贝其他的对象（{}）类型呢
     }
 
     // 数据不存在
@@ -483,7 +485,7 @@ function deepCopy5(sourceObj, hash) {
     }
   }
 
-  return obj
+  return root
 }
 
 var obj5 = {
@@ -509,7 +511,10 @@ var copyObj5 = deepCopy5(obj5)
 console.log('copyObj5-copy', copyObj5)
 copyObj5.info.age = 66
 copyObj5.createTime = new Date('2021-08-10 18:16:40')
+copyObj5.func = () => { console.log('我是被修改后的函数') }
+
 console.log('copyObj5-origin', obj5)
+obj5.func()
 
 var arr5 = [
   {
